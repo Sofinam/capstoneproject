@@ -17,3 +17,12 @@ class Inventory(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.quantity} in stock)"
+    
+    class InventoryChange(models.Model):
+        inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE, related_name='change_logs')
+        change = models.IntegerField(help_text="Use positive numbers for restocks, negative for sales.")
+        changed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+        timestamp = models.DateTimeField(auto_now_add=True)
+
+        def __str__(self):
+            return f"{self.change} units by {self.changed_by} on {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
