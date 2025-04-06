@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 # Creating a new inventory
@@ -49,8 +49,8 @@ def delete_inventory(request, inventory_id):
 # implementing CRUD to a logged in user
 @login_required
 def list_items(request):
-    items = Inventory.objects.filter(user=request.user)
-    return render(request, 'inventory/item_list.html', {'items: items'})
+    items = Inventory.objects.filter(owner=request.user)
+    return render(request, 'inventory/item_list.html', {'items': items})
 
 @login_required
 def create_item(request):
@@ -60,7 +60,7 @@ def create_item(request):
         item.owner = request.user
         item.save()
         return redirect('item-list')
-    return render(request, 'inventory/item_form.html', {'form: form'})
+    return render(request, 'inventory/item_form.html', {'form': form})
 
 @login_required
 def update_item(request, pk):
@@ -110,7 +110,7 @@ def filtered_inventory_view(request):
     return render(request, 'inventory/filtered_inventory.html', {'inventory': inventory})
 
 # Creating register and login views
-
+@csrf_exempt
 @api_view(['POST'])
 def register_user(request):
     username = request.data.get('username')
@@ -123,12 +123,13 @@ def register_user(request):
     token = Token.objects.create(user=user)
     return Response({'message': 'User registered successfully', 'token': token.key})
 
+@csrf_exempt
 @api_view(['POST'])
 def login_user(request):
     username = request.data.get('username')
     password = request.data.get('password')
+    
     user = authenticate(username=username, password=password)
-
     if user is not None:
         token, _ = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})

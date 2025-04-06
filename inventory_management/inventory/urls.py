@@ -3,7 +3,7 @@ from .import views
 from django.contrib.auth import views as auth_views
 from .views import InventoryListView, filtered_inventory_view, register_user, login_user
 
-# Define the url patterns
+# Define the url patterns for web based views
 urlpatterns = [
     path('', views.display_inventory, name='display_inventory'),
     path('create/', views.create_inventory, name='create_inventory'),
@@ -11,8 +11,10 @@ urlpatterns = [
     path('delete/<int:inventory_id>/', views.delete_inventory, name='delete_inventory'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    
+    # API end points
     path('inventory/', InventoryListView.as_view(), name='inventory-list'),
     path('filtered-inventory/', filtered_inventory_view, name='filtered-inventory'),
-    path('api/rregister/', register_user, name='register'),
-    path('api/login/', login_user, name='login'),
+    path('register/', register_user, name='api-register'),
+    path('api/login/', login_user, name='api-login'),
 ]
