@@ -1,10 +1,11 @@
 from django.urls import path
-from .import views
+from . import views
 from django.contrib.auth import views as auth_views
 from .views import InventoryListView, filtered_inventory_view, register_user, login_user
 
 # Define the url patterns for web based views
 urlpatterns = [
+    path('', views.home, name='home'),
     path('', views.display_inventory, name='display_inventory'),
     path('create/', views.create_inventory, name='create_inventory'),
     path('update/<int:inventory_id>/', views.update_inventory, name='update_inventory'),

@@ -14,15 +14,25 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 # Create your views here.
+
+# App home view
+def home(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'Inventory/home.html')
 # Creating a new inventory
 def create_inventory(request):
     if request.method == 'POST':
-        name = request.POST['name']
-        Inventory.objects.create(name=name)
-        return redirect('display_inventory')
-    return render(request, 'inventory/create_inventory.html')
+        form = InventoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('display_inventory')
+    else:
+        form = InventoryForm()
+    return render(request, 'inventory/create_inventory.html', {'form': form})
 
 # display all the inventory in stock
 def display_inventory(request):
