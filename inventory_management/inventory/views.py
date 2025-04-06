@@ -87,7 +87,7 @@ def delete_item(request, pk):
     if request.method == 'POST':
         item.delete()
         return redirect('item-list')
-    return render(request, 'inventory/itemm_confirm_delete.html', {'item': item})
+    return render(request, 'inventory/item_confirm_delete.html', {'item': item})
 
 class InventoryListView(APIView):
     permission_classes = []
