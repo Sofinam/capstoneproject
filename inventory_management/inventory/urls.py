@@ -1,7 +1,7 @@
 from django.urls import path
 from .import views
 from django.contrib.auth import views as auth_views
-from .views import InventoryListView, filtered_inventory_view
+from .views import InventoryListView, filtered_inventory_view, register_user, login_user
 
 # Define the url patterns
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('inventory/', InventoryListView.as_view(), name='inventory-list'),
     path('filtered-inventory/', filtered_inventory_view, name='filtered-inventory'),
+    path('api/rregister/', register_user, name='register'),
+    path('api/login/', login_user, name='login'),
 ]
